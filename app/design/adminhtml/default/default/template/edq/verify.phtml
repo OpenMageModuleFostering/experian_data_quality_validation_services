@@ -1,0 +1,210 @@
+<?php
+    $params = $this->getRequest()->getParams();
+    if($params && array_key_exists('id', $params))
+    {    
+        $unsEdqInfoMatrixFor = 'unsEdqInfoMatrixFor' . $params['id'];
+        Mage::getSingleton('adminhtml/session')->$unsEdqInfoMatrixFor();
+    }
+    $helper = Mage::helper('addressvalidation/Settings');
+?>
+<script type="text/javascript">
+//<![CDATA[
+    (function() {
+        var isUSAEnabled = Boolean(<?php echo $helper->areUSDataSetsEnabled(); ?>);
+        var isCANEnabled = Boolean(<?php echo $helper->isCANEnabled(); ?>);
+        var isGBREnabled = Boolean(<?php echo $helper->isGBREnabled(); ?>);
+        var isDEUEnabled = Boolean(<?php echo $helper->isDEUEnabled(); ?>);
+        var isIRLEnabled = Boolean(<?php echo $helper->isIRLEnabled(); ?>);
+        
+        window.ExperianDataQuality = window.ExperianDataQuality || {};
+        window.ExperianDataQuality.DataQuality = window.ExperianDataQuality.DataQuality || {};
+        window.ExperianDataQuality.DataQuality.Address = window.ExperianDataQuality.DataQuality.Address || {};
+        
+        window.ExperianDataQuality.DataQuality.Address.InteractionRequired = "<?php echo $this->__('We recommend:'); ?>";
+        window.ExperianDataQuality.DataQuality.Address.PremisesPartial = "<?php echo $this->__('Confirm your Apartment/Suite/Unit number:'); ?>";
+        window.ExperianDataQuality.DataQuality.Address.StreetPartial = "<?php echo $this->__('Confirm your House/Building number:'); ?>";
+        window.ExperianDataQuality.DataQuality.Address.AptAppend = "<?php echo $this->__('Confirm your House/Building number:'); ?>";
+        window.ExperianDataQuality.DataQuality.Address.Multiple = "<?php echo $this->__('Our suggested matches:'); ?>";
+        window.ExperianDataQuality.DataQuality.Address.None = "<?php echo $this->__('No Match'); ?>";
+        
+        window.ExperianDataQuality.DataQuality.Address.EnterSelection = "<?php echo $this->__("Enter selection"); ?>";
+        window.ExperianDataQuality.DataQuality.Address.PleaseSelectASuggestions = "<?php echo $this->__("Please select a suggestion."); ?>";
+        window.ExperianDataQuality.DataQuality.Address.RefinementText = "<?php echo $this->__('Your selection covers a range of addresses. Enter your exact details:'); ?>";
+        window.ExperianDataQuality.DataQuality.Address.ToManyMatchesMessage = "<?php echo $this->__("Search cancelled (too many matches)"); ?>";
+        window.ExperianDataQuality.DataQuality.Address.NoMatchesMessage = "<?php echo $this->__("No matches"); ?>";
+        window.ExperianDataQuality.DataQuality.Address.PleaseEnterExactDetailsMessage = "<?php echo $this->__("Please enter exact details."); ?>";
+        window.ExperianDataQuality.DataQuality.Address.AddressOutsideOfRanageMessage = "<?php echo $this-> __("This address is outside of the range. Please try again or click Back and select the correct range."); ?>";
+                
+        window.ExperianDataQuality.DataQuality.Address.LicensedDataSets = [];
+        
+        if(isUSAEnabled) {
+            window.ExperianDataQuality.DataQuality.Address.LicensedDataSets.push('US');
+        }
+        
+        if(isCANEnabled) {
+            window.ExperianDataQuality.DataQuality.Address.LicensedDataSets.push('CA');
+        }
+        
+        if(isGBREnabled) {
+            window.ExperianDataQuality.DataQuality.Address.LicensedDataSets.push('GB');
+        }
+        
+        if(isDEUEnabled) {
+            window.ExperianDataQuality.DataQuality.Address.LicensedDataSets.push('DE');
+        }
+        
+        if(isIRLEnabled) {
+            window.ExperianDataQuality.DataQuality.Address.LicensedDataSets.push('IE');
+        }
+        
+        if(!isCANEnabled && !isUSAEnabled && !isGBREnabled && !isDEUEnabled && !isIRLEnabled) { return false; }
+                
+        var existingAddresses = $('address_list').select('li');
+            
+        if(existingAddresses.length > 0) 
+        {            
+            for (var i=0, max=existingAddresses.length; i<max; i++) {
+                var prefix = existingAddresses[i].readAttribute('id').replace(/[^\d.]/g, "");   
+                var countryElement = $('_item' + prefix + 'country_id');
+                var postcodeElement = $('_item' + prefix + 'postcode');
+                
+                edq_configureSingleLine(postcodeElement, countryElement, prefix);
+            }
+        }  
+        edq_initializeObervations();
+    })();
+    
+    function edq_initializeObervations(){
+        var addNewAddressButton = $('add_address_button');		
+
+        addNewAddressButton.observe('click', function() {
+            var newAddress = $('address_list').select('li').last();
+            var prefix = newAddress.readAttribute('id').replace(/[^\d.]/g, '');
+            var countryElement = $('_item' + prefix + 'country_id');
+            var postcodeElement = $('_item' + prefix + 'postcode');
+            
+            edq_configureSingleLine(postcodeElement, countryElement, prefix);
+        });
+    } 
+    
+    function edq_configureSingleLine(postcodeElement, countryElement, prefix) {        
+        edq_insertSingleLineTemplate(postcodeElement, prefix);   
+        edq_putCountryOnTop(prefix, countryElement);
+        edq_initializeAddressConfigurations(prefix);
+        
+        edq_toggleBuildingNumberOrNameAndStreet(prefix, countryElement);
+        
+        countryElement.observe('change', function() {
+            edq_toggleBuildingNumberOrNameAndStreet(prefix, countryElement);
+        });
+    }
+    
+    function edq_toggleBuildingNumberOrNameAndStreet(prefix, countryElement) {
+        var streetElement = $('edq-street-' + prefix);        
+        var buildingNumberElement = $('edq-building-number-' + prefix);     
+        
+        if(countryElement.value === 'DE')        
+            streetElement.up('tr').insert( { 'after' : buildingNumberElement.up('tr') } );        
+        else        	
+            buildingNumberElement.up('tr').insert( { 'after' : streetElement.up('tr') } );	
+        
+    }
+            
+    function edq_putCountryOnTop(prefix, countryElement) {
+        $('_item' + prefix + 'company').up('tr').insert( { 'after' : countryElement.up('tr') } );	
+    } 
+    
+    function edq_initializeAddressConfigurations(prefix) {
+        var dq = ExperianDataQuality.DataQuality;
+        
+        var addressConfiguration = new dq.Configuration();
+        var addressMapping = {
+            'DataSet': '_item' + prefix + 'country_id', 
+            'ManualEntry' : 'edq-manual-entry-' + prefix,
+            'Street1': 'edq-street-' + prefix,
+            'Postcode': 'edq-zip-' + prefix,
+            'Town': 'edq-town-or-locality-' + prefix,
+            'FindAddressButton': 'edq-find-address-button-' + prefix,
+            'BuildingNumberOrName': 'edq-building-number-' + prefix,
+            'UnknownPostCode': 'edq-unknown-postcode-' + prefix,
+            'KnownPostCode': 'edq-known-postcode-' + prefix,
+            'Suggestions': 'edq-suggestions-' + prefix,
+            'BackButton': ['edq-back-button-' + prefix,
+                           'edq-back-button-' + prefix + '-suggestions',
+                           'edq-back-button-' + prefix + '-tryagain',
+                           'edq-back-button-' + prefix + '-next'],
+            'SelectButton': 'edq-select-button-' + prefix,
+            'Refinement': 'edq-refine-input-' + prefix,
+            'NextButton': 'edq-next-address-button-' + prefix,
+            'ErrorMessage': 'edq-error-message-' + prefix,
+            'MatchType': 'edq-matchtype-' + prefix,
+            'TryAgain': 'edq-try-again-button-' + prefix,
+            'ChangeAddressButton' : 'edq-change-address-button-' + prefix,
+            'Loader' : 'edq-loader-please-wait-' + prefix,
+            'Line0' : '_item' + prefix + 'street0',
+            'Line1' : '_item' + prefix + 'street1',
+            'Line2' : '_item' + prefix + 'city',
+            'Line3' : '_item' + prefix + 'region_id',
+            'Line4' : '_item' + prefix + 'postcode'
+        };
+        
+        createInputAndOutputMappingFor(addressMapping, addressConfiguration, prefix);   
+                
+        var edqAddressClient = new dq.Address.Client();       
+        edqAddressClient.addConfiguration(addressConfiguration);
+        edqAddressClient.initialize();
+        
+        dq.Address.Configuration.IsManualEntryAllowed = Boolean(<?php echo $helper->isManualEntryEnabled(); ?>);
+        dq.Address.Configuration.SearchServiceUrl = '<?php echo Mage::getUrl('adminhtml/processAdmin/searchSingleLine' , array('_secure' => true, '_current' => true)); ?>' + '?isAjax=true';
+        dq.Address.Configuration.RefineServiceUrl = '<?php echo Mage::getUrl('adminhtml/processAdmin/refineSingleLine', array('_secure' => true, '_current' => true)); ?>' + '?isAjax=true';
+        dq.Address.Configuration.GetAddressServiceUrl = '<?php echo Mage::getUrl('adminhtml/processAdmin/formatSingleLine', array('_secure' => true, '_current' => true)); ?>' + '?isAjax=true';
+    }      
+    
+    
+    function createInputAndOutputMappingFor(elements, configuration, prefix) {
+        var sys = ExperianDataQuality.system;
+        var dq = ExperianDataQuality.DataQuality;
+
+        for (var key in elements) {
+            if (!elements.hasOwnProperty(key)) {
+                continue;
+            }
+
+            if(sys.isArray(elements[key])) {
+                var allElementExist = true;
+                
+                for(var i = 0, max = elements[key].length; i < max; i++) {
+                    var element = sys.getElementById(elements[key][i]);
+
+                    if (sys.isNull(element)) {
+                        allElementExist = false;
+                        continue;
+                    }
+                }
+                
+                if(!allElementExist) {
+                    continue;
+                }
+            } else {
+                var element = sys.getElementById(elements[key]);
+
+                if (sys.isNull(element)) {
+                    continue;
+                }
+            }
+
+            if (element.tagName !== dq.HtmlTags.Label) {
+                configuration.addInputMapping(key, elements[key]);
+            }           
+        }
+        configuration.addOutputMapping('_item' + prefix + 'street0', "Line0");
+        configuration.addOutputMapping('_item' + prefix + 'street1', "Line1");
+        configuration.addOutputMapping('_item' + prefix + 'city', "Line2");
+        configuration.addOutputMapping('_item' + prefix + 'region', "Line3");
+        configuration.addOutputMapping('_item' + prefix + 'region_id', "Line3");
+        configuration.addOutputMapping('_item' + prefix + 'postcode', "Line4");
+
+        configuration.addOutputMapping('edq-error-message-' + prefix, "ErrorMessage");
+    };
+//]]>
+</script>

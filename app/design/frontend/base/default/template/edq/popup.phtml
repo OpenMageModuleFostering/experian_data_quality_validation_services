@@ -1,0 +1,50 @@
+<?php
+    $QAS_HEAD = array
+    (
+        "InteractionRequired" => 'We think that your address may be incorrect or incomplete. To proceed, please choose one of the options below.',
+        "PremisesPartial" => 'Sorry, we think your apartment/suite/unit is missing or wrong. To proceed, please enter your apartment/suite/unit or use your address as entered.',
+        "StreetPartial" => 'Sorry, we don\'t recognize your house or building number. To proceed, please check and choose from one of the options below.',
+        "DPVPartial" => 'Sorry, we don\'t recognize your house or building number. To proceed, please check and choose from one of the options below.',
+        "AptAppend" => 'Sorry, we think your apartment/suite/unit is missing or wrong. To proceed, please enter your apartment/suite/unit or use your address as entered.',
+        "Multiple" => 'We found more than one match for your address. To proceed, please choose one of the options below.',
+        "None" => 'Sorry, we could not find a match for your address. To proceed, please choose one of the options below.'
+    );
+
+    $QAS_PROMPT = array
+    (
+        "InteractionRequired" => 'We recommend:',
+        "PremisesPartial" => 'Confirm your Apartment/Suite/Unit number:',
+        "StreetPartial" => 'Confirm your House/Building number:',
+        "AptAppend" => 'Confirm your House/Building number:',
+        "Multiple" => 'Our suggested matches:',
+        "None" => 'No Match'
+    );
+
+    $searchResult = Mage::getSingleton('core/session')->getSearchResult();    
+?>
+
+<div class="dashboard">
+    <div class="box-account box-info info-box">
+        <div class="box-head">
+            <h2 class="sub-title"><?php echo $this->__('Verify Your Address Details'); ?></h2>
+        </div>
+        <div class='notice-msg demo-notice qas_prompt'>
+            <?php echo $this->__($QAS_HEAD[$searchResult['matchType']]); ?>
+        </div>
+        <div class="col2-set">
+            <div class="col-1 col-wide wide">
+                <div class="box">
+                    <div class="box-title">
+                        <h3><?php echo $this->__($QAS_PROMPT[$searchResult['matchType']]); ?></h3>
+                    </div>
+                    <div class="box-content">
+                        <?php echo $this->getChildHtml('interaction') ?>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2 col-narrow narrow">
+                <?php echo $this->getChildHtml('rightside') ?>
+            </div>
+        </div>
+    </div>
+</div>

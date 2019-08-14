@@ -1,0 +1,31 @@
+<script type="text/javascript">
+	function createConfigurations(isPhoneValidationEnabled, isEmailValidationEnabled, isPhoneCoutryEnabled) {
+	    var configurations = new Array();
+        
+            if(isPhoneValidationEnabled) {    
+                configurations.push(createPhoneConfiguration('telephone', isPhoneCoutryEnabled));
+                configurations.push(createPhoneConfiguration('fax', isPhoneCoutryEnabled));
+            }
+
+            return configurations; 
+	}
+        
+        function createPhoneConfiguration(phoneHtmlElementId, isPhoneCoutryEnabled) {
+            var dq = EDQ.DataQuality;  
+
+            var configuration = new dq.Configuration();
+
+             configuration.type = dq.ConfigurationType.Phone; 
+
+             if(isPhoneCoutryEnabled) {
+                 configuration.addInputMapping(dq.PhoneCountry, getCountryCodeFieldId(phoneHtmlElementId));
+             }
+             configuration.addInputMapping(dq.Phone, phoneHtmlElementId); 
+
+             configuration.addOutputMapping(phoneHtmlElementId, dq.Phone);        
+             configuration.addOutputMapping(getValidationLabelId(phoneHtmlElementId), dq.ValidationMessageForLabel);
+             configuration.addOutputMapping(getLoaderId(phoneHtmlElementId), dq.Loader);
+
+            return configuration;
+         }
+</script>

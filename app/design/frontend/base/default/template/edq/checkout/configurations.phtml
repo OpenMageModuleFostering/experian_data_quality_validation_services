@@ -1,0 +1,54 @@
+<script type="text/javascript">
+    function createConfigurations(isPhoneValidationEnabled, isEmailValidationEnabled, isPhoneCoutryEnabled) {
+        var configurations = new Array();
+        
+        if(isPhoneValidationEnabled) {    
+            if($('billing:telephone')) { configurations.push(createPhoneConfiguration('billing:telephone', isPhoneCoutryEnabled)); }
+            if($('billing:fax')) { configurations.push(createPhoneConfiguration('billing:fax', isPhoneCoutryEnabled)); }
+            if($('shipping:telephone')) { configurations.push(createPhoneConfiguration('shipping:telephone', isPhoneCoutryEnabled)); }
+            if($('shipping:fax')) { configurations.push(createPhoneConfiguration('shipping:fax', isPhoneCoutryEnabled)); }
+        }
+        
+        if(isEmailValidationEnabled) {
+            if($('billing:email')) { configurations.push(createEmailConfiguration('billing:email')); }
+        }
+
+        return configurations; 
+    } 
+    
+    function createPhoneConfiguration(phoneHtmlElementId, isPhoneCoutryEnabled) {
+       var dq = EDQ.DataQuality;  
+         
+       var configuration = new dq.Configuration();
+       
+        configuration.type = dq.ConfigurationType.Phone; 
+        
+        if(isPhoneCoutryEnabled) {
+            configuration.addInputMapping(dq.PhoneCountry, getCountryCodeFieldId(phoneHtmlElementId));
+        }
+        configuration.addInputMapping(dq.Phone, phoneHtmlElementId); 
+        
+        configuration.addOutputMapping(phoneHtmlElementId, dq.Phone);        
+        configuration.addOutputMapping(getValidationLabelId(phoneHtmlElementId), dq.ValidationMessageForLabel);
+        configuration.addOutputMapping(getLoaderId(phoneHtmlElementId), dq.Loader);
+        
+       return configuration;
+    }
+    
+    function createEmailConfiguration(emailHtmlElementId) {
+        var dq = EDQ.DataQuality;  
+         
+        var configuration = new dq.Configuration();
+        
+        configuration.type = dq.ConfigurationType.Email;
+        
+        configuration.addInputMapping(dq.Email, emailHtmlElementId);
+        
+        configuration.addOutputMapping(emailHtmlElementId, dq.Email);   
+        configuration.addOutputMapping(getSuggestionLabelId(emailHtmlElementId), dq.CorrectionsForLabel);     
+        configuration.addOutputMapping(getValidationLabelId(emailHtmlElementId), dq.ValidationMessageForLabel);
+        configuration.addOutputMapping(getLoaderId(emailHtmlElementId), dq.Loader);
+                
+        return configuration;
+    }
+</script>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- File: app/code/local/EDQ/EmailAndPhoneValidation/etc/adminhtml.xml -->
+<config>
+    <acl>
+        <resources> 
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <experiandataquality_emailandphonevalidation module="emailandphonevalidation">
+                                        <title>EDQ - General</title>
+                                    </experiandataquality_emailandphonevalidation>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

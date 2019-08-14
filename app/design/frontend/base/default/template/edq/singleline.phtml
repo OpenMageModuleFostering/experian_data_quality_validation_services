@@ -1,0 +1,182 @@
+<?php
+    $prefix = $this->getPrefix();
+?>
+<ul class='form-list' id=<?php echo $prefix; ?>-edq-singleline >
+        
+    <li class='fields edq_wrapper'  style='display: none;'>
+        <div class='field'>
+            <label for=<?php echo $prefix; ?>-edq-building-number><?php echo $this->__('Building Number or Name'); ?></label>
+            <div class='input-box'>
+                <input id=<?php echo $prefix; ?>-edq-building-number type='text' class='input-text' tabindex="10" size="40"/>
+            </div>
+        </div>        
+    </li>
+    <!-- End of row-->
+    
+    <li class='fields edq_wrapper'  style='display: none;'>
+        <div class='field'>
+            <label for=<?php echo $prefix; ?>-edq-street><?php echo $this->__('Street'); ?></label>
+            <div class='input-box'>
+                <input id=<?php echo $prefix; ?>-edq-street type='text' class='input-text' tabindex="20" size="40" />
+            </div>
+        </div>        
+    </li>
+    <!-- End of row-->
+    
+    <li class='fields edq_wrapper'  style='display: none;'>
+        <div class='field'>
+            <label for=<?php echo $prefix; ?>-edq-town-or-locality><?php echo $this->__('Town'); ?></label>
+            <div class='input-box'>
+                <input id=<?php echo $prefix; ?>-edq-town-or-locality type='text' class='input-text' tabindex="30" size="40"/>
+            </div>
+        </div>        
+    </li>
+    <!-- End of row-->
+    
+    <li class='fields edq_wrapper' style='display: none;'>
+        <div class='field'>
+            <label for=<?php echo $prefix; ?>-edq-zip><?php echo $this->__('Postcode'); ?></label>
+            <div class='input-box'>
+                <input id=<?php echo $prefix; ?>-edq-zip type='text' class='input-text' tabindex="40" size="10"/>
+            </div>
+        </div>        
+    </li>
+    <!-- End of row-->
+    
+    <li class='fields edq_wrapper'  style='display: none;'>
+        <div class='field'>
+            <label for=<?php echo $prefix; ?>-edq-refine-input><?php echo $this->__('Your selection covers a range of addresses. Enter your exact details: '); ?></label>
+            <div class='input-box'>
+                <input id=<?php echo $prefix; ?>-edq-refine-input type='text' class='input-text' tabindex="50" size="10"/>
+            </div>
+        </div>        
+    </li>
+    <!-- End of row-->
+         
+    <li class='wide edq_wrapper' style='display: none;'>
+        <label for=<?php echo $prefix; ?>-edq-suggestions><?php echo $this->__('Suggestions'); ?></label>
+        <div class='input-box'>
+            <select id=<?php echo $prefix; ?>-edq-suggestions size='5' class='address-select' ></select>
+        </div>
+    </li>
+    <!-- End of row-->
+    
+    <li class='fields edq_wrapper' style='display: none;'>
+        <div class='field edq_error_message'>
+            <label></label>
+            <div class='input-box' id=<?php echo $prefix; ?>-edq-error-message>                
+                <input type='text' class='input-text' style='display: none;' disabled="disabled"/>
+            </div>
+        </div>  
+    </li>
+    <!-- End of row-->
+    
+    <li class='fields edq_wrapper' style='display: none;'>
+        <div class='field'>
+            <label></label>
+            <div class='input-box'>
+                 <a href='javascript:void(0);' id=<?php echo $prefix; ?>-edq-unknown-postcode ><?php echo $this->__('If you don\'t know the postcode click here'); ?></a>
+            </div>
+        </div>        
+    </li>
+    <!-- End of row-->
+    
+    <li class='fields edq_wrapper' style='display: none;' >
+        <div class='field'>
+            <label></label>
+            <div class='input-box'>
+                 <a href='javascript:void(0);' id=<?php echo $prefix; ?>-edq-known-postcode><?php echo $this->__('If you know the postcode click here'); ?></a>
+            </div>
+        </div>        
+    </li>
+    <!-- End of row-->
+                          
+    <div class='buttons-set edq_wrapper form-buttons' style='display: none; margin-bottom: 10px;'>        
+        <button id=<?php echo $prefix; ?>-edq-select-button title='<?php echo $this->__('Select'); ?>' type='button' class='button'>
+            <span>
+                <span><?php echo $this->__('Select'); ?></span>
+            </span>
+        </button> 
+        <button id=<?php echo $prefix; ?>-edq-back-button-suggestions title='<?php echo $this->__('Back'); ?>' type='button' class='button'>
+            <span>
+                <span><?php echo $this->__('Back'); ?></span>
+            </span>
+        </button> 
+    </div>
+    <!-- End of row -->
+    
+    <div class='buttons-set edq_wrapper form-buttons' style='display: none; margin-bottom: 10px;'>
+        <button id=<?php echo $prefix; ?>-edq-change-address-button title='<?php echo $this->__('Change Address'); ?>' type='button' class='button'>
+            <span>
+                <span><?php echo $this->__('Change Address'); ?></span>
+            </span>
+        </button> 
+    </div>
+    <!-- End of row -->
+        
+    <div class='buttons-set edq_wrapper form-buttons' style='display: none; margin-bottom: 10px;'>
+        <button id=<?php echo $prefix; ?>-edq-try-again-button title='<?php echo $this->__('Try Again'); ?>' type='button' class='button'>
+            <span>
+                <span><?php echo $this->__('Try Again'); ?></span>
+            </span>  
+        </button>    
+        <button id=<?php echo $prefix; ?>-edq-back-button-tryagain title='<?php echo $this->__('Back'); ?>' type='button' class='button'>
+            <span>
+                <span><?php echo $this->__('Back'); ?></span>
+            </span>
+        </button> 
+    </div>
+    <!-- End of row -->
+    
+    <div class='buttons-set edq_wrapper form-buttons' style='display: none; margin-bottom: 10px;'>        
+        <button id=<?php echo $prefix; ?>-edq-find-address-button title='<?php echo $this->__('Find Address'); ?>' type='button' class='button'>
+            <span>
+                <span><?php echo $this->__('Find Address'); ?></span>
+            </span>
+        </button>   
+    </div>
+    
+    <div class='buttons-set edq_wrapper form-buttons' style='display: none; margin-bottom: 10px;'>           
+        <button id=<?php echo $prefix; ?>-edq-next-address-button title='<?php echo $this->__('Next'); ?>' type='button' class='button'>
+            <span>
+                <span><?php echo $this->__('Next'); ?></span>
+            </span>  
+        </button> 
+        <button id=<?php echo $prefix; ?>-edq-back-button-next title='<?php echo $this->__('Back'); ?>' type='button' class='button'>
+            <span>
+                <span><?php echo $this->__('Back'); ?></span>
+            </span>
+        </button>
+    </div>
+    <!-- End of row -->
+    
+    <div class='buttons-set edq_wrapper form-buttons' style='display: none; margin-bottom: 10px;'>
+        <button id=<?php echo $prefix; ?>-edq-back-button title='<?php echo $this->__('Back'); ?>' type='button' class='button'>
+            <span>
+                <span><?php echo $this->__('Back'); ?></span>
+            </span>
+        </button> 
+    </div>
+    
+    <li style='display: none; clear:both;'>
+        &nbsp;
+    </li>
+     <!-- End of row-->     
+     
+    <li class='wide edq_wrapper form-buttons' style='display: none;'>
+        <label></label>
+        <div class='input-box' style="float: right;">
+            <a style="float: right;" href='javascript:void(0);' id=<?php echo $prefix; ?>-edq-manual-entry><?php echo $this->__('Enter address manually'); ?></a>
+        </div>
+    </li>
+    <!-- End of row-->
+   
+    <li class='wide edq_wrapper form-buttons' style='display: none;'>
+        <label></label>
+        <div id=<?php echo $prefix; ?>-loader-please-wait style="float: right;" class='input-box'>
+            <span style="float: right;  margin-left: 5px;"><?php echo $this->__('Loading next step...') ?></span>
+            <img style="display: inline; float: right;" src='<?php echo $this->getSkinUrl('ExperianDataQuality/images/opc-ajax-loader.gif', array('_area'=>'frontend')) ?>' alt='<?php echo $this->__('Loading next step...') ?>' title='<?php echo $this->__('Loading next step...') ?>' class='v-middle' /> 
+        </div>
+    </li>
+    <!-- End of row-->
+</ul>

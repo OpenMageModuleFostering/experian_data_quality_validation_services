@@ -1,0 +1,351 @@
+<script type="text/javascript">
+<?php   
+    $prefix = 'book';
+    $helper = Mage::helper('addressvalidation/Settings');
+?>
+//<![CDATA[
+    (function() { 
+        var isGBREnabled = Boolean(<?php echo $helper->isGBREnabled(); ?>);
+        var isDEUEnabled = Boolean(<?php echo $helper->isDEUEnabled(); ?>);
+        var isIRLEnabled = Boolean(<?php echo $helper->isIRLEnabled(); ?>);
+        
+        window.ExperianDataQuality = window.ExperianDataQuality || {};
+        window.ExperianDataQuality.DataQuality = window.ExperianDataQuality.DataQuality || {};
+        window.ExperianDataQuality.DataQuality.Address = window.ExperianDataQuality.DataQuality.Address || {};
+        
+        window.ExperianDataQuality.DataQuality.Address.EnterSelection = "<?php echo $this->__("Enter selection"); ?>";
+        window.ExperianDataQuality.DataQuality.Address.PleaseSelectASuggestions = "<?php echo $this->__("Please select a suggestion."); ?>";
+        window.ExperianDataQuality.DataQuality.Address.RefinementText = "<?php echo $this->__('Your selection covers a range of addresses. Enter your exact details:'); ?>";
+        window.ExperianDataQuality.DataQuality.Address.ToManyMatchesMessage = "<?php echo $this->__("Search cancelled (too many matches)"); ?>";
+        window.ExperianDataQuality.DataQuality.Address.NoMatchesMessage = "<?php echo $this->__("No matches"); ?>";
+        window.ExperianDataQuality.DataQuality.Address.PleaseEnterExactDetailsMessage = "<?php echo $this->__("Please enter exact details."); ?>";
+        window.ExperianDataQuality.DataQuality.Address.AddressOutsideOfRanageMessage = "<?php echo $this-> __("This address is outside of the range. Please try again or click Back and select the correct range."); ?>";
+        
+        window.ExperianDataQuality.DataQuality.Address.LicensedDataSets = [];
+        
+        if(isGBREnabled) {
+            window.ExperianDataQuality.DataQuality.Address.LicensedDataSets.push('GB');
+        }
+        
+        if(isDEUEnabled) {
+            window.ExperianDataQuality.DataQuality.Address.LicensedDataSets.push('DE');
+        }
+        
+        if(isIRLEnabled) {
+            window.ExperianDataQuality.DataQuality.Address.LicensedDataSets.push('IE');
+        }
+        
+        $$('#form-validate button')[0].observe('click', function(event) {
+            var validator = new Validation(this.form);
+            if (validator.validate()) {
+                var request = new Ajax.Request(
+                    '<?php echo Mage::getUrl('customer/process/verifyAddress', array('_secure' => true, '_current' => true)); ?>',
+                    {
+                        method: 'post',
+                        onSuccess: qas_showVerify,
+                        onFailure: qas_onAjaxFailure,
+                        parameters: Form.serialize(this.form)
+                    });
+                event.preventDefault();
+                event.stop();
+            }
+        });
+        
+        initializeSignleLine(isGBREnabled, isDEUEnabled, isIRLEnabled);  
+    })();
+    
+    var qas_clean = function(posturl, isRefine)
+    {
+        if(isRefine) {
+            var request = new Ajax.Request( posturl,
+            {
+                method: 'post',
+                onSuccess: qas_showVerify,
+                onFailure: qas_onAjaxFailure,
+                parameters: {'refinetext': $('qas_refine').value}
+            });
+        } else {
+            var request = new Ajax.Request( posturl,
+            {
+                method: 'post',
+                onSuccess: qas_showVerify,
+                onFailure: qas_onAjaxFailure
+            });
+        }
+    };
+
+    var qas_showVerify = function(transport)
+    {      
+        if (transport && transport.responseText) {
+            try {
+                response = transport.responseText.evalJSON(true);
+            }
+            catch (e) {
+                response = {};
+            }
+        }
+
+        if (response.error) {
+            qas_close();
+            $('form-validate').submit();
+            return;
+        }
+
+        if(response.address) {  
+            $('street_1').value = response.address.street[0];
+            $('street_2').value = response.address.street[1];
+            $('city').value = response.address.city;
+            $('region_id').value = response.address.region_id;
+            $('zip').value = response.address.postcode;
+            
+            qas_close();
+            
+            $('form-validate').submit();
+        } else {
+            window.scroll(0,0);
+            $('qas_popup').innerHTML = "";
+            $('qas_popup').innerHTML = transport.responseText;
+            document.getElementById('qas_cover').style.display = "";
+            document.getElementById('qas_popup').style.display = "";
+        } 
+    };
+    
+    var qas_onAjaxFailure = function() {
+        qas_close();
+        $('form-validate').submit();
+    };
+    
+    var qas_close = function() {
+        document.getElementById('qas_cover').style.display = "none";
+        document.getElementById('qas_popup').style.display = "none";
+    };   
+    
+    function initializeSignleLine(isGBREnabled, isDEUEnabled, isIRLEnabled) {         
+        if(!isGBREnabled && !isDEUEnabled && !isIRLEnabled) { return false; }
+        
+        var prefix = '<?php echo $prefix; ?>';
+        var countryElement = $('country');
+        var singleLineTemplate = <?php 
+                            $this->getChild('singleline')->setData('prefix', $prefix);
+                            echo json_encode($this->getChildHtml('singleline', false)); 
+                          ?>;
+        
+        countryElement.up('li').insert( { 'after' : singleLineTemplate } );
+        edq_putCountryOnTop(countryElement);
+        edq_singleLineSetUp(prefix, countryElement.value, isGBREnabled, isDEUEnabled, isIRLEnabled);
+        countryElement.observe('change', function(){ edq_singleLineSetUp(prefix, this.value, isGBREnabled, isDEUEnabled, isIRLEnabled); });
+        edq_initializeAddressConfigurations(prefix);
+        
+         edq_toggleBuildingNumberOrNameAndStreet(prefix, countryElement);
+        
+        countryElement.observe('change', function() {
+            edq_toggleBuildingNumberOrNameAndStreet(prefix, countryElement);            
+        });
+    }
+    
+    function edq_singleLineSetUp(prefix, dataSet, isGBREnabled, isDEUEnabled, isIRLEnabled) {		
+        if((dataSet === 'GB' && isGBREnabled) 
+        || (dataSet === 'DE' && isDEUEnabled)
+        || (dataSet === 'IE' && isIRLEnabled)) {   
+            $(prefix + '-edq-singleline').show();
+        }
+        else {
+            $(prefix + '-edq-singleline').hide();
+        }	
+    }
+    
+    function edq_toggleBuildingNumberOrNameAndStreet(prefix, countryElement) {
+        var streetElement = $(prefix + '-edq-street');
+        var buildingNumberElement = $(prefix + '-edq-building-number'); 
+        
+        if(countryElement.value === 'DE') 
+            streetElement.up('li').insert( { 'after' : buildingNumberElement.up('li') } );            
+        else 
+            buildingNumberElement.up('li').insert( { 'after' : streetElement.up('li') } );            
+    }
+        
+    function edq_initializeAddressConfigurations(prefix) {
+        var dq = ExperianDataQuality.DataQuality;
+        
+        var addressConfiguration = new dq.Configuration();
+        var addressMapping = {
+            'ManualEntry': prefix + '-edq-manual-entry',
+            'DataSet': 'country',
+            'Street1': prefix + '-edq-street',
+            'City': prefix + '-edq-city',
+            'State': prefix + '-edq-state',
+            'Postcode': prefix + '-edq-zip',
+            'Town': prefix + '-edq-town-or-locality',
+            'FindAddressButton': prefix + '-edq-find-address-button',
+            'BuildingNumberOrName': prefix + '-edq-building-number',
+            'UnknownPostCode': prefix + '-edq-unknown-postcode',
+            'KnownPostCode': prefix + '-edq-known-postcode',
+            'Suggestions': prefix + '-edq-suggestions',
+            'BackButton': [prefix + '-edq-back-button',
+                           prefix + '-edq-back-button-suggestions',
+                           prefix + '-edq-back-button-tryagain',
+                           prefix + '-edq-back-button-next'], 
+            'SelectButton': prefix + '-edq-select-button',
+            'Refinement': prefix + '-edq-refine-input',
+            'NextButton': prefix + '-edq-next-address-button',
+            'ErrorMessage': prefix + '-edq-error-message',
+            'TryAgain': prefix + '-edq-try-again-button',
+            'ChangeAddressButton' : prefix + '-edq-change-address-button',
+            'Loader' : prefix + '-loader-please-wait',
+            'Line0' : 'street_1',
+            'Line1' : 'street_2',
+            'Line2' : 'city',
+            'Line3' : 'region',
+            'Line4' : 'zip'
+        };
+        
+        createInputAndOutputMappingFor(addressMapping, addressConfiguration, prefix);        
+                
+        var edqAddressClient = new dq.Address.Client();       
+        edqAddressClient.addConfiguration(addressConfiguration);
+        edqAddressClient.initialize();
+        
+        dq.Address.Configuration.IsManualEntryAllowed = Boolean(<?php echo $helper->isManualEntryEnabled(); ?>);
+        dq.Address.Configuration.SearchServiceUrl = '<?php echo Mage::getUrl('customer/process/searchSingleLine', array('_secure' => true, '_current' => true)); ?>';
+        dq.Address.Configuration.RefineServiceUrl = '<?php echo Mage::getUrl('customer/process/refineSingleLine', array('_secure' => true, '_current' => true)); ?>';
+        dq.Address.Configuration.GetAddressServiceUrl = '<?php echo Mage::getUrl('customer/process/formatSingleLine', array('_secure' => true, '_current' => true)); ?>';
+    }
+    
+    function createInputAndOutputMappingFor(elements, configuration, prefix) {
+        var sys = ExperianDataQuality.system;
+        var dq = ExperianDataQuality.DataQuality;
+        
+        for (var key in elements) {
+            if (!elements.hasOwnProperty(key)) {
+                continue;
+            }
+            
+            if(sys.isArray(elements[key])) {
+                var allElementExist = true;
+                
+                for(var i = 0, max = elements[key].length; i < max; i++) {
+                    var element = sys.getElementById(elements[key][i]);
+
+                    if (sys.isNull(element)) {
+                        allElementExist = false;
+                        continue;
+                    }
+                }
+                
+                if(!allElementExist) {
+                    continue;
+                }
+            } else {
+                var element = sys.getElementById(elements[key]);
+
+                if (sys.isNull(element)) {
+                    continue;
+                }
+            }
+
+            if (element.tagName !== dq.HtmlTags.Label) {
+                configuration.addInputMapping(key, elements[key]);
+            }           
+        }
+        
+        configuration.addOutputMapping('street_1', "Line0");
+        configuration.addOutputMapping('street_2', "Line1");
+        configuration.addOutputMapping('city', "Line2");
+        configuration.addOutputMapping('region', "Line3");
+        configuration.addOutputMapping('region_id', "Line3");
+        configuration.addOutputMapping('zip', "Line4");
+        
+        configuration.addOutputMapping(prefix + '-edq-error-message', "ErrorMessage");
+    }; 
+    
+    function edq_putCountryOnTop(countryElement) {
+        var postcode =  $('zip');
+        var street1 = $('street_1');
+        
+        if(postcode.up('li').select('select').length > 0) {
+            var countryListElement = new Element('li');
+
+            countryListElement.className = 'fields';
+            countryListElement.update(countryElement.up('div.field'));
+
+            street1.up('li').insert( { 'before' : countryListElement } );		
+        }
+    } 
+    
+    var qas_putCountryOnTop = function() {
+        if($('zip').up('li').select('select').length > 0) {
+            var countryListElement = new Element('li');
+
+            countryListElement.className = 'fields';
+            countryListElement.update($('country').up('div.field'));
+
+            $('street_1').up('li').insert( { 'before' : countryListElement } );		
+        } 
+    };
+//]]>
+</script>
+
+<style type="text/css">
+    div.cover
+    {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        background: #333333;
+        filter:alpha(Opacity=75);
+        opacity: 0.5;
+        -moz-opacity: 0.5;
+        -khtml-opacity: 0.5;
+        z-index: 999;
+    }
+
+    div.popup
+    {
+        left:10%;
+        top:20%;
+        padding: 0em;
+        width: 850px;
+        max-height: 425px;
+        position: absolute;
+        z-index:1000;
+        overflow: auto;
+        background: white;
+    }
+
+    div.qas_prompt
+    {
+        margin-bottom: 1em;
+    }
+
+    div#picklist td
+    {
+        padding-right: 0.7em;
+    }
+    div.popup a
+    {
+        cursor: pointer;
+    }
+    
+    h4.error_message
+    {
+        background: #d75f07;
+        color: #fff;
+        padding: 5px;
+    }
+    div.edq_error_message
+    {
+        clear: both;
+        color: #eb340a;
+        font-size: 11px;
+        font-weight: bold;
+        line-height: 13px;
+        margin: 3px 0 0;
+        min-height: 13px;
+        padding-left: 17px;
+    }
+</style>
+
+<div style="display: none" id='qas_cover' class='cover'></div>
+<div style="display: none" id='qas_popup' class='popup'></div>

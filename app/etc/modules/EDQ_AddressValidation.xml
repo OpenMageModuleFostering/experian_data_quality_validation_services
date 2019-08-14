@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <EDQ_AddressValidation>
+            <active>true</active>
+            <codePool>community</codePool>
+        </EDQ_AddressValidation>
+    </modules>
+</config>

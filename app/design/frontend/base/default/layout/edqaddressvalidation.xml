@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">  
+    <!--
+        Multi Shipping BEGIN
+    -->
+    
+    <checkout_multishipping_customer_address>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/json2.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/system.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/edqClient.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/edqAddressClient.js</name></action> 
+        </reference> 
+        <reference name="content"> 
+            <block type="customer/address_edit" name="customer_address_edq_verify" template="edq/customer/verify.phtml">
+                <block type="customer/address_edit" output="toHtml" name="customer_onepage_edq_singleline" as="singleline" template="edq/singleline.phtml"/> 
+            </block> 
+        </reference> 
+    </checkout_multishipping_customer_address>
+    
+    <checkout_multishipping_register>
+         <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/json2.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/system.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/edqClient.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/edqAddressClient.js</name></action> 
+        </reference> 
+        <reference name="content"> 
+            <block type="customer/address_edit" name="customer_address_edq_verify" template="edq/customer/verify.phtml">
+                <block type="customer/address_edit" output="toHtml" name="customer_onepage_edq_singleline" as="singleline" template="edq/singleline.phtml"/> 
+            </block> 
+        </reference> 
+    </checkout_multishipping_register>
+    
+    <!--
+        Multi Shipping END
+    -->         
+    <!-- 
+        Checkout BEGIN 
+    -->
+    <checkout_onepage_index> 
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/json2.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/system.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/edqClient.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/edqAddressClient.js</name></action> 
+        </reference> 
+        <reference name="content"> 
+            <block type="checkout/onepage_progress" name="checkout_onepage_edq_verify" template="edq/checkout/verify.phtml">
+                <block type="checkout/onepage_progress" output="toHtml" name="checkpout_onepage_edq_singleline" as="singleline" template="edq/singleline.phtml"/> 
+            </block>          
+        </reference> 
+    </checkout_onepage_index>
+    
+    <checkout_process_verify>        
+        <block type="checkout/onepage_progress"  name="root" output="toHtml"  template="edq/popup.phtml">
+            <block type="checkout/onepage_progress" name="edq_chechout_rightside" as="rightside" template="edq/rightside.phtml"/>
+            <block type="checkout/onepage_progress" name="edq_interaction" as="interaction" template="edq/interaction.phtml"/> 
+        </block>
+    </checkout_process_verify>
+    
+    <checkout_process_verifybilling>
+        <update handle="checkout_process_verify" />
+    </checkout_process_verifybilling>
+
+    <checkout_process_verifyshipping>
+        <update handle="checkout_process_verify" />
+    </checkout_process_verifyshipping>
+
+    <checkout_process_refinepremises>
+        <update handle="checkout_process_verify" />
+    </checkout_process_refinepremises>
+
+    <checkout_process_refinestreet>
+        <update handle="checkout_process_verify" />
+    </checkout_process_refinestreet>
+
+    <checkout_process_refine>
+        <update handle="checkout_process_verify" />
+    </checkout_process_refine>    
+    <!-- 
+        Checkout END 
+    -->
+    
+    <!-- 
+        Customer BEGIN 
+    -->    
+    <customer_address_form>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/json2.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/system.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/edqClient.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/edqAddressClient.js</name></action> 
+        </reference> 
+        <reference name="content"> 
+            <block type="customer/address_edit" name="customer_address_edq_verify" template="edq/customer/verify.phtml">
+                <block type="customer/address_edit" output="toHtml" name="customer_onepage_edq_singleline" as="singleline" template="edq/singleline.phtml"/> 
+            </block> 
+        </reference> 
+    </customer_address_form>
+    
+    <customer_process_verifyaddress>
+        <block type="customer/address_edit" name="root" output="toHtml" template="edq/popup.phtml">
+            <block type="customer/address_edit" name="edq_customer_rightside" as="rightside" template="edq/rightside.phtml"/>
+            <block type="customer/address_edit" name="edq_interaction" as="interaction" template="edq/interaction.phtml"/>
+        </block>
+    </customer_process_verifyaddress>        
+    
+    <customer_process_refinepremises>
+        <update handle="customer_process_verifyaddress" />
+    </customer_process_refinepremises>
+
+    <customer_process_refinestreet>
+        <update handle="customer_process_verifyaddress" />
+    </customer_process_refinestreet>
+
+    <customer_process_refine>
+        <update handle="customer_process_verifyaddress" />
+    </customer_process_refine>    
+    <!-- 
+        Customer END
+    -->     
+</layout>

@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>    
+    <sections> 
+        <experiandataquality_addressvalidation translate="label" module="addressvalidation">
+            <label>Address</label>            
+            <sort_order>20</sort_order>
+            <tab>experiandataquality</tab>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>                
+                <settings translate="label" module="addressvalidation">
+                    <label>Address Validation Settings</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>                 
+                    <fields> 
+                        <service_type translate="label" module="addressvalidation">
+                            <backend_model>addressvalidation/validate</backend_model> 
+                            <label>Service</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>EDQ_AddressValidation_Model_ServiceProviders</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_type>    
+<!-- 
+    Pro OnDemand Settings 
+-->
+                        <proondemand_heading translate="label">                        
+                            <label>Pro On Demand Settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><service_type><![CDATA[proondemand]]></service_type></depends>
+                        </proondemand_heading> 
+                        <endpoint translate="label" module="addressvalidation">          
+                            <label>On Demand Endpoint</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><service_type><![CDATA[proondemand]]></service_type></depends>
+                        </endpoint> 
+                        <token translate="label" module="addressvalidation">          
+                            <label>On Demand Token</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><service_type><![CDATA[proondemand]]></service_type></depends>
+                        </token>
+<!-- 
+    Pro OnDemand Settings 
+-->
+<!-- 
+    USA Settings 
+-->
+                        <usa_heading translate="label">                        
+                            <label>USA Dataset Settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </usa_heading>
+                        <enable_ati translate="label" module="addressvalidation">
+                            <label>Enable ATI</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_ati>
+                        <usa_clean translate="label" module="addressvalidation">
+                            <label>USA Clean</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </usa_clean>                            
+                        <usa_layout translate="label" module="addressvalidation">
+                            <label>USA Layout</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><usa_clean>1</usa_clean></depends>
+                        </usa_layout>                        
+                        <use_layout translate="label" module="addressvalidation">
+                            <label>USE Layout</label>                            
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><enable_ati>1</enable_ati></depends>
+                        </use_layout>
+<!-- 
+    USA Settings 
+-->
+<!-- 
+    CAN Settings 
+-->
+                        <can_heading translate="label">
+                            <label>CAN Dataset Settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </can_heading>
+                        <can_clean translate="label" module="addressvalidation">
+                            <label>CAN Clean</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </can_clean>
+                        <can_layout translate="label" module="addressvalidation">
+                            <label>CAN Layout</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><can_clean>1</can_clean></depends>
+                        </can_layout>
+<!-- 
+    CAN Settings 
+-->
+<!-- 
+    GBR Settings 
+-->
+                        <grb_heading translate="label">                        
+                            <label>GBR Dataset Settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </grb_heading>
+                        <gbr_clean translate="label" module="addressvalidation">
+                            <label>GBR Clean</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>170</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </gbr_clean>
+                        <gbr_layout translate="label" module="addressvalidation">
+                            <label>GBR Layout</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>180</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><gbr_clean>1</gbr_clean></depends>
+                        </gbr_layout>
+<!-- 
+    GBR Settings 
+-->
+<!-- 
+    DEU Settings 
+-->
+                        <deu_heading translate="label">                        
+                            <label>DEU Dataset Settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>190</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </deu_heading>
+                        <deu_clean translate="label" module="addressvalidation">
+                            <label>DEU Clean</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </deu_clean>
+                        <deu_layout translate="label" module="addressvalidation">
+                            <label>DEU Layout</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>210</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><deu_clean>1</deu_clean></depends>
+                        </deu_layout>
+<!-- 
+    DEU Settings 
+-->
+<!-- 
+    IRL Settings 
+-->
+                        <irl_heading translate="label">                        
+                            <label>IRL Dataset Settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>220</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </irl_heading>
+                        <irl_clean translate="label" module="addressvalidation">
+                            <label>IRL Clean</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>230</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </irl_clean>
+                        <irl_layout translate="label" module="addressvalidation">
+                            <label>IRL Layout</label>                            
+                            <frontend_type>text</frontend_type>
+                            <sort_order>240</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><irl_clean>1</irl_clean></depends>
+                        </irl_layout>       
+<!-- 
+    IRL Settings 
+-->      
+<!-- 
+    Proxy Settings 
+-->          
+                        <proxy_heading translate="label">                        
+                            <label>Proxy Server Settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </proxy_heading>
+                        <use_proxy translate="label" module="addressvalidation">
+                            <label>Use a proxy</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>260</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </use_proxy>
+                        <proxyname translate="label" module="addressvalidation">
+                            <label>Proxy URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>270</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><use_proxy>1</use_proxy></depends>
+                        </proxyname>
+                        <proxyport translate="label" module="addressvalidation">
+                            <label>Proxy Port</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>280</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><use_proxy>1</use_proxy></depends>
+                        </proxyport>
+                        <proxyuser translate="label" module="addressvalidation">
+                            <label>Proxy Username</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>290</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><use_proxy>1</use_proxy></depends>
+                        </proxyuser>
+                        <proxypassword translate="label" module="addressvalidation">
+                            <label>Proxy Password</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><use_proxy>1</use_proxy></depends>
+                        </proxypassword>
+<!-- 
+    Proxy Settings 
+--> 
+
+<!-- 
+    Additional Settings 
+-->
+                        <additional_configss_heading translate="label">                        
+                            <label>Additional Settings</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>310</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </additional_configss_heading>
+                        <user_interaction translate="label" module="addressvalidation">
+                            <label>Prompt for User Interaction</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>320</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </user_interaction>        
+                        <manual_address_entry translate="label" module="addressvalidation">
+                            <label>Manual Address Entry</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>330</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </manual_address_entry>                              
+                        <lvr translate="label" module="addressvalidation">
+                            <label>LVR Check Line Number</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>340</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </lvr>
+                        <ir_disp translate="label" module="addressvalidation">
+                            <label>Interaction Required Display Lines</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>350 </sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ir_disp>
+<!-- 
+    Additional Settings 
+-->
+                    </fields>
+                </settings>    
+            </groups>
+        </experiandataquality_addressvalidation>
+    </sections>
+</config>

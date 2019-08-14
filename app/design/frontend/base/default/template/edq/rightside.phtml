@@ -1,0 +1,89 @@
+<?php
+    $data         = Mage::getSingleton('core/session')->getCustomerData();
+    $isBilling    = Mage::getSingleton('core/session')->getIsBilling();
+    $isCheckout   = Mage::getSingleton('core/session')->getIsCheckout();    
+    $routeToController = $isCheckout ? 'checkout' : 'customer';
+     
+    function getRegion($country, $regionId)
+    { 
+        $regions = json_decode(Mage::helper('directory')->getRegionJson());
+                
+        foreach ($regions->$country as $key => $value)
+        {
+            if($key === $regionId) 
+            {
+                return $value->name;
+            }
+        }        
+    }
+?>
+
+<div class="box">
+    <div class="box-title">
+        <h3>
+            <?php echo $this->__('You Entered:') ?>
+        </h3>
+        <a onclick="qas_close()">
+            <?php echo $this->__('Edit'); ?>
+        </a>
+    </div>
+    <div class="box-content">
+        <address>
+            <?php 
+                if(isset($data['address']['firstname']) && isset($data['address']['lastname']))
+                {
+                    echo $data['address']['firstname'] . ' ' . $data['address']['lastname'];  
+                }
+            ?>
+                <br>
+            <?php 
+                if(isset($data['address']['street']) && isset($data['address']['street'][0]))
+                {
+                    echo $data['address']['street'][0];  
+                }
+            ?>
+                <br>
+            <?php 
+                if(isset($data['address']['city']) && isset($data['address']['country_id']) && isset($data['address']['region_id']) && isset($data['address']['postcode']))
+                {
+                    echo $data['address']['city'] . ', ' . getRegion($data['address']['country_id'], $data['address']['region_id']) . ', ' . $data['address']['postcode']; 
+                }
+            ?>
+                <br>
+            <?php 
+                if(isset($data['address']['country_id']))
+                {
+                    echo $data['address']['country_id'] === 'US' ? ' United States' : 'Canada'; 
+                }
+            ?>   
+                <br>
+            <?php 
+                if(isset($data['address']['telephone']) && strlen($data['address']['telephone']) > 0)
+                {
+                    echo 'T: ' . $data['address']['telephone']; 
+                }
+            ?>
+                <br>
+            <?php 
+                if(isset($data['address']['fax']) && strlen($data['address']['fax']) > 0)
+                {
+                    echo 'F: ' . $data['address']['fax']; 
+                }
+            ?>
+        </address>
+        <br />
+        <button type="button" 
+                title="<?php echo $this->__('Use Address As Entered *'); ?>" 
+                class="button" 
+                onclick="qas_clean('<?php echo Mage::getUrl($routeToController . '/process/original', array('_secure' => true, '_current' => true)); ?>', false)">
+            <span>
+                <span>
+                    <?php echo $this->__('Use Address As Entered *'); ?>
+                </span>
+            </span>
+        </button>
+        <p class="notice">
+            <?php echo $this->__('* Your address may be undeliverable'); ?>
+        </p>
+    </div>
+</div>

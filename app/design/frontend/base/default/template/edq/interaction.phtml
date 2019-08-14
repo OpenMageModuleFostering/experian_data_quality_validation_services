@@ -1,0 +1,178 @@
+<?php
+    $helper = Mage::helper('addressvalidation/Settings');
+    $searchResult = Mage::getSingleton('core/session')->getSearchResult();
+    $isCheckOut = Mage::getSingleton('core/session')->getIsCheckout();
+    $isInformationInvalid = Mage::getSingleton('core/session')->getInvalidInfo(); 
+    
+    $routeToController = $isCheckOut ? 'checkout' : 'customer';
+    
+    if ($searchResult['matchType'] === 'InteractionRequired') 
+    {
+        ?>
+        <form action="" id="qas_inter_accept">
+            <?php
+                $key = 'Line';
+                $numberOfLines = $helper->getNumberOfInteraotionRequiredDisplayLines();
+                for ($i = 0; $i < $numberOfLines; $i++) 
+                {
+                    $addressItem = $searchResult['cleanAddress'][$key . $i];
+                    if($i == 3)
+                    {          
+                        $region = Mage::getModel('directory/region')->load($addressItem);
+                        echo $region->getName();               
+                    }
+                    else
+                    {
+                        echo $addressItem;
+                    }
+                    echo ($addressItem !== "" ? "<br />" : "");
+                }
+            ?>
+            <br />
+            <button type="button" title="<?php echo $this->__('Use suggested address'); ?>" class="button" onclick="qas_clean('<?php echo Mage::getUrl($routeToController . '/process/accept', array('_secure'=>true, '_current'=>true)); ?>', false)">
+                <span><span><?php echo $this->__('Use suggested address'); ?></span></span>
+            </button>
+        </form>
+        <?php
+    } 
+    else if ($searchResult['matchType'] === 'PremisesPartial') 
+    {
+        ?>
+        <form action="" id='qas_premise_refine'>
+            <?php if($isInformationInvalid) { ?>
+                <h4 class="error_message"><?php echo $this->__('Submitted information is invalid'); ?></h4>
+            <?php } ?>
+            <input type='text' class='input-text' id='qas_refine' name='refinetext' />
+            <button type="button"  title="<?php echo $this->__('Confirm number'); ?>" class="button" onclick="qas_clean('<?php echo Mage::getUrl($routeToController . '/process/refinePremises', array('_secure'=>true, '_current'=>true)); ?>', true)">
+                <span><span><?php echo $this->__('Confirm number'); ?></span></span>
+            </button>
+        </form>
+        <br /><br />
+        <?php
+        displayPartialPicklist($searchResult['picklist'], $this, $routeToController);
+    } 
+    else if ($searchResult['matchType'] === 'StreetPartial') {
+        ?>
+        <form action="" id="qas_street_refine">
+            <?php if($isInformationInvalid) { ?>
+                <h4 class="error_message"><?php echo $this->__('Submitted information is invalid'); ?></h4>
+            <?php } ?>
+            <input type='text' class='input-text' id="qas_refine" name='refinetext' />
+            <button type="button" title="<?php echo $this->__('Confirm number'); ?>" class="button" onclick="qas_clean('<?php echo Mage::getUrl($routeToController . '/process/refineStreet', array('_secure'=>true, '_current'=>true)); ?>', true)">
+                <span><span><?php echo $this->__('Confirm number'); ?></span></span>
+            </button>
+        </form>
+        <br /><br />
+        <?php
+        displayPartialPicklist($searchResult['picklist'], $this, $routeToController);
+    } 
+    else if ($searchResult['matchType'] === 'Multiple')
+    {
+        displayMultiplePicklist($searchResult['picklist'], $routeToController);
+    } 
+    else if ($searchResult['matchType'] === 'None') 
+    {
+        ?>
+            <h1><?php echo $this->__('Sorry, We could not find your address'); ?></h1>
+        <?php
+    } 
+    else if ($searchResult['matchType'] === 'DPVPartial')
+    {
+        ?>
+        <form action="" id="qas_dpv_refine">
+            <input type='text' class='input-text' id="qas_refine" name='refinetext' />
+            <button type="button" title="<?php echo $this->__('Confirm number') ?>" class="button" onclick="qas_clean('<?php echo Mage::getUrl($routeToController . '/process/refineStreet', array('_secure'=>true, '_current'=>true)); ?>', true)">
+                <span><span><?php echo $this->__('Confirm number'); ?></span></span>
+            </button>
+        </form>            
+        <?php 
+    }
+    else if($searchResult['matchType'] === 'AptAppend')
+    {
+        ?>
+        <form action="" id="qas_apt_add">
+            <?php if($isInformationInvalid) { ?>
+                <h4 class="error_message"><?php echo $this->__('Submitted information is invalid'); ?></h4>
+            <?php } ?>
+            <input type='text' class='input-text' id="qas_refine" name='refinetext' />
+            <button type="button" title="<?php echo $this->__('Confirm number'); ?>" class="button" onclick="qas_clean('<?php echo Mage::getUrl($routeToController . '/process/aptAdd', array('_secure'=>true, '_current'=>true)); ?>', true)">
+                <span><span><?php echo $this->__('Confirm number'); ?></span></span>
+            </button>
+            <br />
+            <a onclick="qas_clean('<?php echo Mage::getUrl($routeToController . '/process/accept', array('_secure'=>true, '_current'=>true)); ?>', false)"><?php echo $this->__('No apt number'); ?></a>
+        </form>
+        <?php
+    }
+
+    function displayPartialPicklist($picklist, $context, $route)
+    {
+        ?>
+        <a href='#' onclick="Effect.toggle('picklist', 'slide', { duration: 1.0 }); return false;"><b><?php echo $context->__('Show all potential matches'); ?></b></a>
+        <br />
+        <div id='picklist' style="display:none;">
+            <table>
+                <?php
+                foreach($picklist as $item) {
+                    if($item['fulladdress']) {
+                ?>
+                        <tr>
+                            <td NOWRAP>
+                                <a onclick="qas_clean('<?php echo Mage::getUrl($route . '/process/format', array('_secure'=>true, '_current'=>true, 'moniker'=>$item['moniker'])); ?>')">
+                                    <?php echo $item['addresstext']; ?>
+                                </a>
+                            </td>
+                            <td NOWRAP><?php echo $item['postcode']; ?></td>
+                        </tr>
+                <?php
+                    } else {
+                ?>
+                        <tr>
+                            <td NOWRAP><?php echo  $item['addresstext']; ?></td>
+                            <td NOWRAP><?php echo $item['postcode']; ?></td>
+                        </tr>
+                <?php
+                    }
+                }
+                ?>
+            </table>
+        </div>
+        <?php
+    }
+
+    function displayMultiplePicklist($picklist, $route)
+    {
+        ?>
+        <div id='picklist'>
+            <table>
+            <?php
+            foreach($picklist as $item) {
+                    if($item['fulladdress']) {
+                    ?>
+                        <tr>
+                            <td NOWRAP>
+                                <a onclick="qas_clean('<?php echo Mage::getUrl($route . '/process/format', array('_secure'=>true, '_current'=>true, 'moniker'=>$item['moniker'])); ?>')">
+                                    <?php echo $item['addresstext']; ?>
+                                </a>
+                            </td>
+                            <td NOWRAP><?php echo $item['postcode']; ?></td>
+                        </tr>
+                        <?php
+                    } else {
+                    ?>
+                        <tr>
+                            <td NOWRAP>
+                                <a onclick="qas_clean('<?php echo Mage::getUrl($route . '/process/refine', array('_secure'=>true, '_current'=>true, 'moniker'=>$item['moniker'])); ?>')">
+                                    <?php echo  $item['addresstext']; ?>
+                                </a>
+                            </td>
+                            <td NOWRAP><?php echo $item['postcode']; ?></td>
+                        </tr>
+                        <?php
+                    }
+                }
+            ?>
+            </table>
+        </div>
+        <?php
+    }
+?>

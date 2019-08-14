@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<layout version="0.1.0">
+	<adminhtml_customer_edit> 
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>edq/js/system.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>edq/js/edqClient.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>edq/js/json2.js</name></action>
+        </reference>
+        <reference name="js">
+            <block type="adminhtml/customer_edit" name="edq_security_token" template="edq/securityToken.phtml"/>
+            <block type="adminhtml/customer_edit" name="initialize" template="edq/initialize.phtml"/>
+        </reference>
+    </adminhtml_customer_edit>
+</layout>

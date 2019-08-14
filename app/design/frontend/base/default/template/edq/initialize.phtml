@@ -1,0 +1,124 @@
+<script type="text/javascript">
+    <?php 
+        $helper = Mage::helper('edq_emailandphonevalidation');
+        $phoneValidateUrl = Mage::getUrl('edq/validation/validatePhone'); 
+        $emailValidateUrl = Mage::getUrl('edq/validation/validateEmail');
+        $loaderLogoUrl = $this->getSkinUrl('images/opc-ajax-loader.gif');
+        $isModuleEnable = Mage::helper('core')->isModuleOutputEnabled('EDQ_EmailAndPhoneValidation');
+    ?>
+    (function () {
+        var isModuleEnable = Boolean(<?php echo $isModuleEnable; ?>);            
+        if(!isModuleEnable) { return false; }
+
+        var isPhoneValidationEnabled = Boolean(<?php echo $helper->isPhoneValidateEnabled(); ?>);
+        var isEmailValidationEnabled = Boolean(<?php echo $helper->isEmailValidateEnabled(); ?>);
+        var isPhoneCoutryEnabled     = Boolean(<?php echo $helper->isPhoneCountrySelectionEnabled(); ?>);
+
+        if(!isPhoneValidationEnabled && !isEmailValidationEnabled) { return false; }
+
+        var configurations = createConfigurations(isPhoneValidationEnabled, isEmailValidationEnabled, isPhoneCoutryEnabled);  
+
+        var dq = new EDQ.DataQuality.Client(configurations, 
+        {
+            phoneUrl: '<?php echo $phoneValidateUrl ?>',
+            emailUrl: '<?php echo $emailValidateUrl ?>',
+            token: ($('session-security-token') ? $F('session-security-token') : ''),
+            defaultCountry: '<?php echo $helper->getPhoneDefaultCountry() ?>'
+        });
+
+        dq.initialize();
+    })();
+
+    function getCountryCodeFieldId(id) {
+        var countryCodeFieldId = id + '-areacode';
+        
+        if(!$(countryCodeFieldId)) {
+            insertCoutryCodeDropDown(countryCodeFieldId, id);
+        }
+        
+        return countryCodeFieldId;
+    } 
+
+    function insertCoutryCodeDropDown(id, anchor) {   
+        var currentFieldWidth = $(anchor).getStyle('width');
+        var newFieldWidth = stripNumericFromString(currentFieldWidth) - 65;
+        
+        $(anchor).insert( { 'before' : getCountryPhoneCodesHTML(id) } );
+        $(anchor).setStyle( { width : newFieldWidth + 'px' } ); 
+        $(id).value = '<?php echo $helper->getPhoneDefaultCountry() ?>';
+    }
+
+    function getCountryPhoneCodesHTML(id) {
+        var html  = "<select id=" + id + " name=" + id + " style='float:left; width:60px; margin-right:5px;'>"; 
+            html +=     "<option value='+1'><?php echo $this->__('USA') ?></option>";
+            html +=     "<option value='+33'><?php echo $this->__('FRA') ?></option>";
+            html +=     "<option value='+61'><?php echo $this->__('AUS') ?></option>";
+            html +=     "<option value='+44'><?php echo $this->__('GBR') ?></option>";
+            html += "</select>"; 
+        return html;    		
+    }
+
+    function getValidationLabelId(id) {
+        var validationLabelId = id + '-validation-label';
+        if(!$(validationLabelId)) {
+                insertValidationLabel(validationLabelId, id);
+        }
+        return validationLabelId;
+    }
+
+    function insertValidationLabel(id, anchor) { 
+        var fieldWidth = $(anchor).getStyle('width');
+        $(anchor).insert( { 'after' : getValidationLabelHTML(id) } );
+        $(id).setStyle({ width : fieldWidth }); 
+        $(id).setStyle({'display' : 'none' }); 
+        $(id).setStyle({'text-align' : 'left' }); 
+    }
+
+    function getValidationLabelHTML(id) {
+        return "<label id=" + id + " value=''></label><br />"; 
+    }
+
+    function getLoaderId(id) {
+        var loaderId = id + '-loader';
+        if(!$(loaderId)) {
+                insertLoaderHTML(loaderId, id);
+        }
+        return loaderId;
+    }
+
+    function insertLoaderHTML(id, anchor) {
+        $(anchor).insert( { 'after' : getLoaderHTML(id) } );
+    }
+
+    function getLoaderHTML(id) {
+        var html  = "<div style='clear:both;'></div>";
+            html += "<span id=" + id + " style='display:none; width:130px; float:left;'>";
+            html += 	"<img src='<?php echo $loaderLogoUrl ?>' alt='<?php echo $this->__('Loading...') ?>' title='<?php echo $this->__('Loading...') ?>'/> <?php echo $this->__('Loading...') ?>";   
+            html += '</span>';
+        return html;  	
+    }   
+
+    function getSuggestionLabelId(id) {
+        var suggestionLabelId = id + '-suggestion-label';
+        if(!$(suggestionLabelId)) {
+                insertValidationLabel(suggestionLabelId, id);
+        }
+        return suggestionLabelId;
+    }  
+
+    function insertSuggestionLabel(id, anchor) { 
+        var fieldWidth = $(anchor).getStyle('width');
+        $(anchor).insert( { 'after' : getSuggestionLabelHTML(id) } );
+        $(id).setStyle({ width : fieldWidth }); 
+        $(id).setStyle({'display' : 'none' }); 
+        $(id).setStyle({'text-align' : 'left' }); 
+    }
+
+    function getSuggestionLabelHTML(id) {
+        return "<label id=" + id + " value=''></label>"; 
+    } 
+    
+    function stripNumericFromString(str) {
+        return parseInt(str.replace(/[^\d.]/g, ""));
+    }
+</script>

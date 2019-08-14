@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">         
+    <!-- 
+        Customer BEGIN
+    -->         
+    <adminhtml_customer_edit>         
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/json2.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/system.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/edqClient.js</name></action> 
+            <action method="addItem"><type>skin_js</type><name>ExperianDataQuality/js/edqAddressClient.js</name></action> 
+        </reference>  
+        <reference name="js"> 
+            <block type="adminhtml/customer_edit" name="customer_edq_singleline" template="edq/singleline.phtml"/>
+            <block type="adminhtml/customer_edit" name="customer_edq_verify" template="edq/verify.phtml"/>
+        </reference>
+    </adminhtml_customer_edit>
+    <!--
+        Customer END
+    -->
+</layout>

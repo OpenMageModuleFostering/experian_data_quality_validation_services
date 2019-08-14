@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<config> 
+    <sections> 
+        <experiandataquality_emailandphonevalidation>
+            <label>Email and Phone</label>            
+            <sort_order>10</sort_order>
+            <tab>experiandataquality</tab>
+            <show_in_default>1</show_in_default>            
+            <groups>
+                <settings>
+                    <label>Email and Phone Validation Settings</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>                    
+                    <fields> 
+                        <enable_email_validate translate="label">
+                            <backend_model>EDQ_EmailAndPhoneValidation_Model_Validate</backend_model>
+                            <label>Enable Email Validate</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_email_validate>
+                        <email_validation_token translate="label">
+                            <label>Email Validation Token</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </email_validation_token>
+                        <email_service_url>
+                            <label>Email Service Url</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </email_service_url>
+                        <enable_phone_validate translate="label">
+                            <label>Enable Phone Validate</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_phone_validate>                        
+                        <phone_validation_token translate="label">
+                            <label>Phone Validation Token</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </phone_validation_token>  
+                        <phone_service_url>
+                            <label>Phone Service Url</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </phone_service_url>
+                        <phone_default_country>
+                            <label>Phone Defaut Country</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>EDQ_EmailAndPhoneValidation_Model_System_Config_Source_Countries</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </phone_default_country>
+                        <use_phone_country_selection translate="label">
+                            <label>Use Phone Country Selection</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </use_phone_country_selection>  
+                    </fields>
+                </settings>
+                <security>
+                    <label>Session Security Token Settings</label>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>                    
+                    <fields>
+                        <enable_session_token_security>
+                            <label>Enable Session Token Security</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_session_token_security>
+                        <session_token_life_time_in_minutes translate="label">
+                            <label>Session Token Lifetime (in minutes)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </session_token_life_time_in_minutes>
+                    </fields>
+                </security>
+            </groups>
+        </experiandataquality_emailandphonevalidation>
+    </sections>    
+</config>

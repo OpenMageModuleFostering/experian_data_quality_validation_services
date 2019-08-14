@@ -1,0 +1,29 @@
+<script type="text/javascript">
+	function createConfigurations(isPhoneValidationEnabled, isEmailValidationEnabled, isPhoneCoutryEnabled) {
+	    var configurations = new Array();
+            var emailId = ($('email_address') ? 'email_address' : ($('email') ? 'email' : ''));
+            
+            if(isEmailValidationEnabled && emailId !== '') {
+                configurations.push(createEmailConfiguration(emailId));
+            }
+
+            return configurations; 
+	}        
+        
+        function createEmailConfiguration(emailHtmlElementId) {
+            var dq = EDQ.DataQuality;  
+
+            var configuration = new dq.Configuration();
+
+            configuration.type = dq.ConfigurationType.Email;
+
+            configuration.addInputMapping(dq.Email, emailHtmlElementId);
+
+            configuration.addOutputMapping(emailHtmlElementId, dq.Email);   
+            configuration.addOutputMapping(getSuggestionLabelId(emailHtmlElementId), dq.CorrectionsForLabel);     
+            configuration.addOutputMapping(getValidationLabelId(emailHtmlElementId), dq.ValidationMessageForLabel);
+            configuration.addOutputMapping(getLoaderId(emailHtmlElementId), dq.Loader);
+
+            return configuration;
+        }   
+</script>

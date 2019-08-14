@@ -1,0 +1,181 @@
+<style type="text/css">
+     .edq-refine-text:focus{
+         background-color:#fcf5dd; 
+         border:1px solid #ea7601;
+     }
+</style>
+
+<script type="text/javascript">
+//<![CDATA[
+    function edq_insertSingleLineTemplate(postcodeElement, prefix) {
+        postcodeElement.up('tr').insert( 
+        { 
+            'after' : edq_getNewInputHtml(prefix, '<?php echo Mage::helper('customer')->__('Building Number or Name'); ?>', 'building-number', 10, 40)
+        });
+        $('edq-building-number-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewInputHtml(prefix, '<?php echo Mage::helper('customer')->__('Street'); ?>', 'street', 20, 40)
+        });
+        $('edq-street-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewInputHtml(prefix, '<?php echo Mage::helper('customer')->__('Town'); ?>', 'town-or-locality', 30, 40) 
+        });
+        $('edq-town-or-locality-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewInputHtml(prefix, '<?php echo Mage::helper('customer')->__('Postcode'); ?>', 'zip', 40, 10) 
+        });
+        $('edq-zip-' + prefix).up('tr').insert(
+        { 
+            'after' : edq_getNewInputHtml(prefix, '<?php echo Mage::helper('customer')->__('Your selection covers a range of addresses. Enter your exact details.'); ?>', 'refine-input', 50, 10)
+        });
+        $('edq-refine-input-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getDropDownHtml(prefix, '<?php echo Mage::helper('customer')->__('Suggestions'); ?>') 
+        });        
+        $('edq-suggestions-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getErrorHtml(prefix) 
+        });        
+        $('edq-error-message-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewLinkHtml(prefix, '<?php echo Mage::helper('customer')->__("If you don\'t know the postcode click here"); ?>', 'unknown-postcode') 
+        });
+        $('edq-unknown-postcode-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewLinkHtml(prefix, '<?php echo Mage::helper('customer')->__('If you know the postcode click here'); ?>', 'known-postcode') 
+        });
+        $('edq-known-postcode-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewButtonHtml(prefix, '<?php echo Mage::helper('customer')->__('Change Address'); ?>' , 'change-address-button') 
+        });        
+        $('edq-change-address-button-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewButtonHtml(prefix, '<?php echo Mage::helper('customer')->__('Select'); ?>', 'select-button') 
+        });
+        $('edq-select-button-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewButtonHtml(prefix, '<?php echo Mage::helper('customer')->__('Next'); ?>', 'next-address-button') 
+        });
+        $('edq-next-address-button-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewButtonHtml(prefix, '<?php echo Mage::helper('customer')->__('Try Again'); ?>', 'try-again-button') 
+        });
+        $('edq-try-again-button-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewButtonHtml(prefix, '<?php echo Mage::helper('customer')->__('Find Address'); ?>', 'find-address-button') 
+        });
+        $('edq-find-address-button-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getNewButtonHtml(prefix, '<?php echo Mage::helper('customer')->__('Back'); ?>', 'back-button') 
+        });        
+        $('edq-back-button-' + prefix).up('tr').insert(
+        { 
+            'after' : edq_getNewLinkHtml(prefix, '<?php echo Mage::helper('customer')->__('Enter address manually'); ?>', 'manual-entry')
+        });
+        $('edq-manual-entry-' + prefix).up('tr').insert( 
+        { 
+            'after' : edq_getLoaderHtml(prefix) 
+        });
+    }
+    
+    function edq_getNewInputHtml(prefix, label, id, tabIndex, size) {
+        var html =  "<tr style='display: none;'>";
+        
+        if(id === 'refine-input'){
+            html += "<td class='label'>";
+            html +=     "<div id=edq-" + "matchtype" + "-" + prefix + "></div>";
+            html += "</td>";
+            html += "<td class='value'>";
+            html +=     "<label for=edq-" + id + "-" + prefix + " >" + label + "</label>";	
+            html +=     "<input id=edq-" + id + "-" + prefix + " class='input-text edq-refine-text' type='text' tabindex=" + tabIndex + " size=" + size + " />";
+            html +=     "</td>";
+            html += "</tr>";
+        }
+        else {
+            html += "<td class='label'>";    
+            html +=     "<label for=edq-" + id + "-" + prefix + ">" + label + "</label>";
+            html += "</td>";
+            html += "<td class='value'>";
+            html +=     "<input id=edq-" + id + "-" + prefix + " class='input-text' type='text' tabindex=" + tabIndex + " size=" + size + " />";
+            html += "</td>";
+            html += "</tr>";
+        }  
+        return html;
+    }
+    
+    function edq_getNewLinkHtml(prefix, label, id) {
+        var html =  "<tr style='display: none;'>";
+            html +=     "<td class='label'></td>";
+            html +=     "<td class='value'>";
+            html +=         "<a href='javascript:void(0);' id=edq-" + id + "-" + prefix + " style='float: right; margin-right: 6.7%;'>" + label + "</a>";	
+            html +=     "</td>";
+            html += "</tr>";
+        return html;
+    }
+    
+    function edq_getNewButtonHtml(prefix, label, id) {
+        var selectLabel = "<?php echo Mage::helper('customer')->__('Select'); ?>";
+        var tryAgainLabel = "<?php echo Mage::helper('customer')->__('Try Again'); ?>";
+        var nextLabel = "<?php echo Mage::helper('customer')->__('Next'); ?>";
+        
+        var html =  "<tr style='display: none;'>";
+            html +=     "<td class='label'></td>";
+            html +=     "<td class='value'>";
+            
+            if(label === selectLabel || label === tryAgainLabel || label === nextLabel) {
+                var backButtonPrefix = label === selectLabel ? 'suggestions' : (label === tryAgainLabel ? 'tryagain' : 'next');
+                
+                html +=         "<button id=edq-back-button-" + prefix + "-" + backButtonPrefix +  " title='<?php echo Mage::helper('customer')->__('Back'); ?>' type='button' class='button' style='float: left;'>"; 
+                html +=             "<span>";
+                html +=                 "<span><?php echo Mage::helper('customer')->__('Back'); ?></span>";
+                html +=             "</span>";
+                html +=         "</button>";
+            }
+            
+            html +=         "<button id=edq-" + id + "-" + prefix + " title=" + label + " type='button' class='button' style='float: right; margin-right: 6.7%;'>"; 
+            html +=             "<span>";
+            html +=                 "<span>" + label + "</span>";
+            html +=             "</span>";
+            html +=         "</button>";
+            html +=     "</td>";
+            html += "</tr>";
+        return html;
+    }
+    
+    function edq_getLoaderHtml(prefix) {
+        var html =  "<tr style='display: none;'>";
+            html +=     "<td class='label'></td>";
+            html +=     "<td class='value'>";
+            html +=         "<span id=edq-loader-please-wait-" + prefix + " style='float: right; margin-right: 6.7%;'>";
+            html += 		"<img src='<?php echo Mage::getDesign()->getSkinUrl('ExperianDataQuality/images/opc-ajax-loader.gif',array('_area'=>'adminhtml')); ?>' alt='<?php echo $this->__('Loading next step...') ?>' title='<?php echo $this->__('Loading next step...') ?>' class='v-middle' /> <?php echo $this->__('Loading next step...') ?>";        	 
+            html +=         "</span>";
+            html +=     "</td>";
+            html += "</tr>";
+        return html;
+    }
+    
+    function edq_getErrorHtml(prefix) {
+        var html =  "<tr style='display: none;'>";
+            html +=     "<td class='label'></td>";
+            html +=     "<td class='value'>";
+            html +=         "<div id=edq-error-message-" + prefix + " class='validation-advice' style='margin-right: 6.7%; background: none repeat scroll 0% 0% transparent;'></div>";
+            html +=     "</td>";
+            html += "</tr>";
+        return html;       
+    }
+    
+    function edq_getDropDownHtml(prefix, label) {
+        var html =  "<tr style='display: none;'>";
+            html +=     "<td class='label'>";
+            html +=         "<label for=edq-suggestions-" + prefix + " >" + label + "</label>";
+            html +=     "</td>";
+            html +=     "<td class='value'>";
+            html +=         "<select id=edq-suggestions-" + prefix + " size='5' class='select input-text'>";
+            html +=             "<option value='' disabled='disabled' selected='selected'></option>";
+            html +=         "</select>";
+            html +=     "</td>";
+            html += "</tr>";
+        return html; 
+    }
+//]]>
+</script>

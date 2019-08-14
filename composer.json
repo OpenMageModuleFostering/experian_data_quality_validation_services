@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Experian_Data_Quality_Validation_Services",
+    "type": "magento-module",
+    "license": "GNU-General-Public-License-(GPL)",
+    "homepage": "",
+    "description": "Address, email, and phone verification services for Magento Enterprise and Community editions.",
+    "authors": [
+    {
+        "name": "ExperianDataQualityVerificationServices",
+        "email": "internetmarketing@qas.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

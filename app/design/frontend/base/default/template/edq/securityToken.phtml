@@ -1,0 +1,40 @@
+<?php
+	$helper = Mage::helper('edq_emailandphonevalidation'); 
+	$token = '';
+
+	if(!$helper->isSessionSecurityEnabled()) {
+		return;
+	}
+	
+	$tokenAndTimeStamp = Mage::getSingleton('core/session', array('name' => 'frontend'))->getTokenAndTimeStamp();
+	$createNewToken = false;
+
+	if(isset($tokenAndTimeStamp)) {
+		$tokenParts = explode('|', $tokenAndTimeStamp);
+		$tokenExparationDate = date('Y-m-d H:i:s', strtotime('+'.$helper->getSessionSecurityTokenLifeTime().' minutes', strtotime($tokenParts[1])));
+		if($tokenExparationDate < $helper->getCurrentDateTime()) {
+			$createNewToken = true;
+		}
+		$token = $tokenParts[0];
+	} else {
+		$createNewToken = true;
+	}
+
+	if($createNewToken) {
+		if(function_exists('com_create_guid')) {
+			$token = com_create_guid();
+		} else { 
+	        $charid = strtoupper(md5(uniqid(rand(), true)));
+	        $hyphen = chr(45);// '-'
+	        $token =  substr($charid, 0, 8).$hyphen
+		             .substr($charid, 8, 4).$hyphen
+		             .substr($charid,12, 4).$hyphen
+		             .substr($charid,16, 4).$hyphen
+		             .substr($charid,20,12);
+		}
+	}
+
+	$tokenAndTimeStamp = $token . '|' . $helper->getCurrentDateTime();
+	Mage::getSingleton('core/session', array('name' => 'frontend'))->setTokenAndTimeStamp($tokenAndTimeStamp); 
+?>
+<input type="hidden" name="token" id="session-security-token" value="<?php echo $token ?>" /> 
